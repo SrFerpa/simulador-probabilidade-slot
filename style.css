@@ -8,7 +8,7 @@
 
 body {
   background: radial-gradient(circle at center, #2b0909 0%, #0f0404 100%);
-  color: #fff;
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,7 +17,7 @@ body {
 
 .academic-banner {
   width: 100%;
-  background: #fbbf24;
+  background-color: #fbbf24;
   color: #450a0a;
   text-align: center;
   padding: 6px;
@@ -26,7 +26,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Estrutura Principal do Gabinete */
 .cabinet {
   width: 100%;
   max-width: 400px;
@@ -38,7 +37,6 @@ body {
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(251, 191, 36, 0.4);
 }
 
-/* Topo estilo Telhado Oriental */
 .temple-header {
   background: linear-gradient(180deg, #047857 0%, #065f46 70%, #b45309 100%);
   border-bottom: 4px solid #fbbf24;
@@ -71,7 +69,7 @@ body {
   align-items: center;
   justify-content: center;
   border: 3px solid #fffbeb;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .game-title {
@@ -79,15 +77,14 @@ body {
   font-size: 0.8rem;
   font-weight: 900;
   color: #fef08a;
-  text-shadow: 1px 1px 2px #000;
+  text-shadow: 1px 1px 2px #000000;
   letter-spacing: 1px;
 }
 
-/* Moldura dos Rolos */
 .reels-frame {
   display: flex;
   align-items: stretch;
-  background: #d97706;
+  background-color: #d97706;
   padding: 8px 4px;
   border-bottom: 4px solid #fbbf24;
 }
@@ -108,7 +105,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 4px;
-  background: #b45309;
+  background-color: #b45309;
   padding: 4px;
   border-radius: 8px;
   border: 2px solid #fef08a;
@@ -143,7 +140,6 @@ body {
   to { transform: translateY(4px); }
 }
 
-/* Faixa de Mensagem */
 .banner-strip {
   background: linear-gradient(90deg, #7f1d1d, #dc2626, #7f1d1d);
   border-bottom: 3px solid #fbbf24;
@@ -152,21 +148,20 @@ body {
   font-weight: 800;
   font-size: 0.95rem;
   color: #fde047;
-  text-shadow: 1px 1px 2px #000;
+  text-shadow: 1px 1px 2px #000000;
 }
 
-/* Barra HUD (Saldo, Aposta, Ganho) */
 .hud-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: #450a0a;
+  background-color: #450a0a;
   padding: 8px 6px;
   border-bottom: 2px solid #b45309;
   gap: 4px;
 }
 
 .hud-item {
-  background: #2a0404;
+  background-color: #2a0404;
   border: 1px solid #92400e;
   border-radius: 6px;
   padding: 5px;
@@ -175,10 +170,9 @@ body {
   justify-content: center;
   gap: 5px;
   font-size: 0.85rem;
-  color: #fff;
+  color: #ffffff;
 }
 
-/* Controles Inferiores e Botão Verde Central */
 .controls-deck {
   display: flex;
   align-items: center;
@@ -188,7 +182,7 @@ body {
 }
 
 .btn-small {
-  background: none;
+  background: transparent;
   border: 1px solid #fbbf24;
   color: #fde047;
   border-radius: 50%;
@@ -201,12 +195,12 @@ body {
 }
 
 .btn-small.active {
-  background: #fbbf24;
+  background-color: #fbbf24;
   color: #450a0a;
 }
 
 .btn-circle {
-  background: #7f1d1d;
+  background-color: #7f1d1d;
   border: 2px solid #fbbf24;
   color: #fde047;
   width: 38px;
@@ -244,14 +238,13 @@ body {
   font-size: 2.2rem;
   color: #fef08a;
   font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Painel Acadêmico Abaixo do Gabinete */
 .stats-panel {
   width: 100%;
   max-width: 400px;
-  background: #1c1917;
+  background-color: #1c1917;
   border: 1px solid #44403c;
   border-radius: 12px;
   padding: 12px 15px;
