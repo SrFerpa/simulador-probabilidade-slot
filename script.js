@@ -1,114 +1,153 @@
-// Tabela de símbolos com pesos probabilísticos e multiplicadores
+// Símbolos inspirados no tema oriental com pesos probabilísticos
 const SIMBOLOS = [
-  { icon: '🍊', peso: 40, mult: 2 },   // Comum (40% de chance)
-  { icon: '🧨', peso: 30, mult: 3 },   // Médio (30% de chance)
-  { icon: '🧧', peso: 18, mult: 5 },   // Incomum (18% de chance)
-  { icon: '💰', peso: 9,  mult: 10 },  // Raro (9% de chance)
-  { icon: '🐯', peso: 3,  mult: 25 }   // Lendário (3% de chance)
+  { icon: '🍊', nome: 'Tangerina', peso: 38, mult: 3 },
+  { icon: '🧨', nome: 'Fogos',     peso: 28, mult: 5 },
+  { icon: '🧧', nome: 'Envelope',  peso: 18, mult: 8 },
+  { icon: '💰', nome: 'Saco Ouro', peso: 10, mult: 10 },
+  { icon: '🎋', nome: 'Amuleto',   peso: 4,  mult: 25 },
+  { icon: '🏆', nome: 'Lingote',   peso: 2,  mult: 100 }
 ];
 
-// Linhas de pagamento (3 horizontais + 2 diagonais)
+const APOSTAS_DISPONIVEIS = [1, 2, 5, 10, 20];
+let indiceAposta = 1; // Começa em R$ 2,00
+let modoTurbo = false;
+let girando = false;
+
+// As 5 linhas clássicas (1: meio, 2: topo, 3: base, 4 e 5: diagonais)
 const LINHAS_VITORIA = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontais
-  [0, 4, 8], [2, 4, 6]             // Diagonais
+  [3, 4, 5], // Linha 1
+  [0, 1, 2], // Linha 2
+  [6, 7, 8], // Linha 3
+  [0, 4, 8], // Linha 4
+  [6, 4, 2]  // Linha 5
 ];
 
-// Estado inicial salvo no navegador
-let estado = JSON.parse(localStorage.getItem('simulador_rng')) || {
+let estado = JSON.parse(localStorage.getItem('simulador_tiger_edu')) || {
   saldo: 100,
   rodadas: 0,
   totalApostado: 0,
-  totalGanho: 0
+  totalGanho: 0,
+  ultimoGanho: 0
 };
 
 const elSaldo = document.getElementById('saldo');
-const elAposta = document.getElementById('aposta');
+const elAposta = document.getElementById('aposta-display');
+const elUltimoGanho = document.getElementById('ultimo-ganho');
 const elGrid = document.getElementById('grid');
 const elMensagem = document.getElementById('mensagem');
-const elRodadas = document.getElementById('total-rodadas');
-const elApostado = document.getElementById('total-apostado');
-const elGanho = document.getElementById('total-ganho');
-const elRtp = document.getElementById('rtp-real');
 
 function sortearSimbolo() {
   const somaPesos = SIMBOLOS.reduce((acc, s) => acc + s.peso, 0);
-  let random = Math.random() * somaPesos;
-  
-  for (const simbolo of SIMBOLOS) {
-    if (random < simbolo.peso) return simbolo;
-    random -= simbolo.peso;
+  let r = Math.random() * somaPesos;
+  for (const s of SIMBOLOS) {
+    if (r < s.peso) return s;
+    r -= s.peso;
   }
   return SIMBOLOS[0];
 }
 
-function atualizarTela() {
-  elSaldo.textContent = `R$ ${estado.saldo.toFixed(2)}`;
-  elRodadas.textContent = estado.rodadas;
-  elApostado.textContent = `R$ ${estado.totalApostado.toFixed(2)}`;
-  elGanho.textContent = `R$ ${estado.totalGanho.toFixed(2)}`;
-  
-  const rtp = estado.totalApostado > 0 
-    ? ((estado.totalGanho / estado.totalApostado) * 100).toFixed(2) 
-    : '0.00';
-  elRtp.textContent = `${rtp}%`;
+function atualizarUI() {
+  const apostaAtual = APOSTAS_DISPONIVEIS[indiceAposta];
+  elSaldo.textContent = `R$ ${estado.saldo.toFixed(2).replace('.', ',')}`;
+  elAposta.textContent = `R$ ${apostaAtual.toFixed(2).replace('.', ',')}`;
+  elUltimoGanho.textContent = `R$ ${estado.ultimoGanho.toFixed(2).replace('.', ',')}`;
 
-  localStorage.setItem('simulador_rng', JSON.stringify(estado));
+  document.getElementById('total-rodadas').textContent = estado.rodadas;
+  document.getElementById('total-apostado').textContent = `R$ ${estado.totalApostado.toFixed(2)}`;
+  document.getElementById('total-ganho').textContent = `R$ ${estado.totalGanho.toFixed(2)}`;
+
+  const rtp = estado.totalApostado > 0
+    ? ((estado.totalGanho / estado.totalApostado) * 100).toFixed(2)
+    : '0.00';
+  document.getElementById('rtp-real').textContent = `${rtp}%`;
+
+  localStorage.setItem('simulador_tiger_edu', JSON.stringify(estado));
 }
 
 function girar() {
-  const aposta = Number(elAposta.value);
+  if (girando) return;
+  const aposta = APOSTAS_DISPONIVEIS[indiceAposta];
 
   if (estado.saldo < aposta) {
-    elMensagem.textContent = 'Saldo fictício insuficiente! Clique em Resetar Dados.';
-    elMensagem.style.color = '#ef4444';
+    elMensagem.textContent = 'Saldo fictício insuficiente! Clique em RESET.';
     return;
   }
 
+  girando = true;
   estado.saldo -= aposta;
   estado.rodadas += 1;
   estado.totalApostado += aposta;
+  estado.ultimoGanho = 0;
+  atualizarUI();
 
-  // Gera matriz 3x3 (9 posições)
-  const resultado = Array.from({ length: 9 }, () => sortearSimbolo());
   const cells = elGrid.querySelectorAll('.cell');
-  
-  cells.forEach((cell, idx) => {
-    cell.textContent = resultado[idx].icon;
-    cell.classList.remove('win');
+  cells.forEach(c => {
+    c.classList.remove('win');
+    c.classList.add('spinning');
   });
+  elMensagem.textContent = 'Sorteando matriz RNG...';
 
-  // Verifica combinações vencedoras
-  let ganhoRodada = 0;
-  LINHAS_VITORIA.forEach(linha => {
-    const [a, b, c] = linha;
-    if (resultado[a].icon === resultado[b].icon && resultado[b].icon === resultado[c].icon) {
-      ganhoRodada += aposta * resultado[a].mult;
-      cells[a].classList.add('win');
-      cells[b].classList.add('win');
-      cells[c].classList.add('win');
+  const tempoGiro = modoTurbo ? 150 : 500;
+
+  setTimeout(() => {
+    const resultado = Array.from({ length: 9 }, () => sortearSimbolo());
+    
+    cells.forEach((cell, i) => {
+      cell.classList.remove('spinning');
+      cell.textContent = resultado[i].icon;
+    });
+
+    let ganhoRodada = 0;
+    LINHAS_VITORIA.forEach(linha => {
+      const [a, b, c] = linha;
+      if (resultado[a].icon === resultado[b].icon && resultado[b].icon === resultado[c].icon) {
+        ganhoRodada += aposta * resultado[a].mult;
+        cells[a].classList.add('win');
+        cells[b].classList.add('win');
+        cells[c].classList.add('win');
+      }
+    });
+
+    if (ganhoRodada > 0) {
+      estado.saldo += ganhoRodada;
+      estado.totalGanho += ganhoRodada;
+      estado.ultimoGanho = ganhoRodada;
+      elMensagem.textContent = `🎉 GANHO FICTÍCIO: R$ ${ganhoRodada.toFixed(2).replace('.', ',')}!`;
+    } else {
+      elMensagem.textContent = 'Sem combinação. Tente novamente!';
     }
-  });
 
-  if (ganhoRodada > 0) {
-    estado.saldo += ganhoRodada;
-    estado.totalGanho += ganhoRodada;
-    elMensagem.textContent = `🎉 Combinação! Retorno fictício de R$ ${ganhoRodada.toFixed(2)}`;
-    elMensagem.style.color = '#22c55e';
-  } else {
-    elMensagem.textContent = 'Sem combinação nesta rodada.';
-    elMensagem.style.color = '#a3a3a3';
-  }
-
-  atualizarTela();
+    girando = false;
+    atualizarUI();
+  }, tempoGiro);
 }
 
+// Eventos dos botões
 document.getElementById('btn-girar').addEventListener('click', girar);
 
-document.getElementById('btn-reset').addEventListener('click', () => {
-  estado = { saldo: 100, rodadas: 0, totalApostado: 0, totalGanho: 0 };
-  elMensagem.textContent = 'Dados da simulação resetados.';
-  elMensagem.style.color = '#fbbf24';
-  atualizarTela();
+document.getElementById('btn-menos').addEventListener('click', () => {
+  if (indiceAposta > 0) {
+    indiceAposta--;
+    atualizarUI();
+  }
 });
 
-atualizarTela();
+document.getElementById('btn-mais').addEventListener('click', () => {
+  if (indiceAposta < APOSTAS_DISPONIVEIS.length - 1) {
+    indiceAposta++;
+    atualizarUI();
+  }
+});
+
+document.getElementById('btn-turbo').addEventListener('click', (e) => {
+  modoTurbo = !modoTurbo;
+  e.currentTarget.classList.toggle('active', modoTurbo);
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  estado = { saldo: 100, rodadas: 0, totalApostado: 0, totalGanho: 0, ultimoGanho: 0 };
+  elMensagem.textContent = 'Simulação resetada para R$ 100,00.';
+  atualizarUI();
+});
+
+atualizarUI();
