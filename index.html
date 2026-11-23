@@ -3,51 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador Acadêmico RNG & RTP (3x3)</title>
+  <title>Simulador RNG 3x3 - Projeto Acadêmico</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="disclaimer">
-    ⚠️ PROJETO ACADÊMICO: Simulador estritamente educacional para estudo de probabilidade (RNG/RTP). Valores 100% fictícios.
+
+  <div class="academic-banner">
+    🎓 PROJETO ACADÊMICO (RNG/RTP) • CRÉDITOS 100% FICTÍCIOS • SEM FINS LUCRATIVOS
   </div>
 
-  <main class="container">
-    <h1>Simulador RNG 3x3 (Estudo de Probabilidade)</h1>
+  <!-- Gabinete estilo Fortune Tiger -->
+  <div class="cabinet">
+    
+    <!-- Topo / Templo -->
+    <header class="temple-header">
+      <div class="roof-tiles"></div>
+      <div class="mascot-area">
+        <div class="tiger-badge">🐯</div>
+        <span class="game-title">SIMULADOR RNG 3x3</span>
+      </div>
+    </header>
 
-    <div class="status-bar">
-      <div>Saldo Fictício: <strong id="saldo">R$ 100,00</strong></div>
-      <div>Aposta: 
-        <select id="aposta">
-          <option value="5">R$ 5,00</option>
-          <option value="10" selected>R$ 10,00</option>
-          <option value="20">R$ 20,00</option>
-        </select>
+    <!-- Área dos Rolos (Grid 3x3) -->
+    <div class="reels-frame">
+      <!-- Indicadores de linhas esquerda -->
+      <div class="line-markers">
+        <span>4</span><span>2</span><span>1</span><span>3</span><span>5</span>
+      </div>
+
+      <div class="grid" id="grid">
+        <div class="cell">🍊</div><div class="cell">🏆</div><div class="cell">🍊</div>
+        <div class="cell">🎋</div><div class="cell">💰</div><div class="cell">🍊</div>
+        <div class="cell">🧧</div><div class="cell">🍊</div><div class="cell">🍊</div>
+      </div>
+
+      <!-- Indicadores de linhas direita -->
+      <div class="line-markers">
+        <span>5</span><span>2</span><span>1</span><span>3</span><span>4</span>
       </div>
     </div>
 
-    <div class="grid" id="grid">
-      <div class="cell">🍊</div><div class="cell">🍊</div><div class="cell">🍊</div>
-      <div class="cell">🐯</div><div class="cell">🐯</div><div class="cell">🐯</div>
-      <div class="cell">🧧</div><div class="cell">🧧</div><div class="cell">🧧</div>
+    <!-- Faixa de Mensagem / Multiplicador -->
+    <div class="banner-strip" id="mensagem">
+      Simulação pronta! Clique no botão verde.
     </div>
 
-    <div id="mensagem" class="mensagem">Clique em "Girar" para iniciar a simulação.</div>
-
-    <div class="controles">
-      <button id="btn-girar">🎲 Girar (Simular)</button>
-      <button id="btn-reset" class="secundario">🔄 Resetar Dados</button>
+    <!-- Barra de Valores (Saldo, Aposta, Ganho) -->
+    <div class="hud-bar">
+      <div class="hud-item">
+        <span class="hud-icon">👛</span>
+        <strong id="saldo">R$ 100,00</strong>
+      </div>
+      <div class="hud-item">
+        <span class="hud-icon">🪙</span>
+        <strong id="aposta-display">R$ 2,00</strong>
+      </div>
+      <div class="hud-item">
+        <span class="hud-icon">🏆</span>
+        <strong id="ultimo-ganho">R$ 0,00</strong>
+      </div>
     </div>
 
-    <section class="estatisticas">
-      <h2>📊 Painel Estatístico da Sessão</h2>
-      <ul>
-        <li>Total de Rodadas: <strong id="total-rodadas">0</strong></li>
-        <li>Total Apostado (Fictício): <strong id="total-apostado">R$ 0,00</strong></li>
-        <li>Total Retornado (Fictício): <strong id="total-ganho">R$ 0,00</strong></li>
-        <li>RTP Real da Sessão: <strong id="rtp-real">0.00%</strong></li>
-      </ul>
-    </section>
-  </main>
+    <!-- Controles Inferiores -->
+    <div class="controls-deck">
+      <button class="btn-small" id="btn-turbo" title="Modo Rápido">⚡<br><small>TURBO</small></button>
+      <button class="btn-circle" id="btn-menos">−</button>
+      
+      <button class="btn-spin" id="btn-girar" title="Girar">
+        <div class="spin-inner">↻</div>
+      </button>
+      
+      <button class="btn-circle" id="btn-mais">+</button>
+      <button class="btn-small" id="btn-reset" title="Resetar Saldo">🔄<br><small>RESET</small></button>
+    </div>
+
+  </div>
+
+  <!-- Painel Acadêmico de Estatísticas (Para avaliação do professor) -->
+  <section class="stats-panel">
+    <h3>📊 Métricas Estatísticas (Avaliação Acadêmica)</h3>
+    <div class="stats-grid">
+      <div>Rodadas: <strong id="total-rodadas">0</strong></div>
+      <div>Apostado: <strong id="total-apostado">R$ 0,00</strong></div>
+      <div>Retorno: <strong id="total-ganho">R$ 0,00</strong></div>
+      <div>RTP Real: <strong id="rtp-real">0.00%</strong></div>
+    </div>
+  </section>
 
   <script src="script.js"></script>
 </body>
